@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PROTEX | AI Workplace Safety</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ================= THEME ================= */
+:root {
+  --bg:#0b0f14;
+  --text:#e5e7eb;
+  --card:#111827;
+  --accent:#22c55e;
+  --muted:#a1a1aa;          /* brighter muted */
+  --border:#30363d;         /* clearer borders */
+  --ok:#22c55e;
+  --warn:#facc15;
+  --bad:#ef4444;
+  
+}
+table td b {
+  font-weight:600;
+}
+
+table td {
+  padding:12px 8px;
+}
+
+.card h4 {
+  margin-bottom:6px;
+  color:var(--text);
+}
+
+.light {
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card:#ffffff;
+  --accent:#16a34a;
+  --muted:#475569;
+  --border:#cbd5e1;
+  --ok:#16a34a;
+  --warn:#ca8a04;
+  --bad:#dc2626;
+}
+
+* { box-sizing:border-box; font-family:Inter,system-ui,sans-serif; }
+body { margin:0; background:var(--bg); color:var(--text); transition:.3s; }
+
+.hidden { display:none !important; }
+
+/* ================= NAV ================= */
+nav {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 32px;
+  background:#00000055;
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:700;
+  font-size:20px;
+  color:var(--accent);
+}
+
+.brand span {
+  font-size:24px;
+}
+
+.nav-actions {
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.nav-actions button {
+  background:none;
+  border:none;
+  color:var(--text);
+  cursor:pointer;
+  font-size:14px;
+}
+
+/* ================= NOTIFICATIONS ================= */
+.notif-container {
+  position:relative;
+}
+
+.notif-btn {
+  cursor:pointer;
+  font-size:16px;
+}
+
+.notif-dot {
+  position:absolute;
+  top:-2px;
+  right:-2px;
+  width:8px;
+  height:8px;
+  background:#ef4444;
+  border-radius:50%;
+}
+
+.notif-box {
+  position:absolute;
+  right:0;
+  top:36px;
+  width:320px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.25);
+  z-index:10;
+}
+
+.notif-item {
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+  font-size:14px;
+}
+
+.notif-item:last-child { border-bottom:none; }
+
+.notif-critical { color:#ef4444; }
+.notif-warning { color:#facc15; }
+
+/* ================= SECTIONS ================= */
+section { display:none; padding:60px 20px; }
+section.active { display:block; }
+
+.container { max-width:1100px; margin:auto; }
+
+/* ================= HOME ================= */
+.hero { text-align:center; margin-top:60px; }
+.hero h2 { font-size:42px; }
+.hero p { max-width:700px; margin:16px auto; color:var(--muted); }
+
+.hero button {
+  margin-top:20px;
+  padding:14px 30px;
+  background:var(--accent);
+  color:white;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+/* Feature visuals */
+.feature-visuals {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+  margin-top:80px;
+}
+
+.feature-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:24px;
+  text-align:center;
+}
+.card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:24px;
+}
+.card h1 {
+  font-size:36px;
+  margin:10px 0 0;
+}
+
+.feature-card div {
+  font-size:34px;
+  margin-bottom:10px;
+}
+.btn {
+  padding:10px 18px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--bg);
+  color:var(--text);
+  cursor:pointer;
+}
+.btn:hover {
+  background:var(--accent);
+  color:white;
+}
+
+/* How it works */
+.steps {
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px;
+  justify-content:center;
+}
+
+.step {
+  background:var(--card);
+  padding:20px;
+  width:220px;
+  border-radius:12px;
+}
+
+.step span {
+  display:inline-block;
+  width:34px;
+  height:34px;
+  line-height:34px;
+  border-radius:50%;
+  background:var(--accent);
+  color:white;
+  margin-bottom:10px;
+}
+
+/* Impact strip */
+.impact {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:20px;
+  margin-top:80px;
+}
+
+.impact div {
+  background:linear-gradient(135deg,#22c55e22,#3b82f622);
+  padding:24px;
+  border-radius:14px;
+  text-align:center;
+}
+
+/* ================= UTIL ================= */
+.center { text-align:center; }
+</style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav>
+  <div class="brand">
+    <span>🛡</span>
+    PROTEX
+  </div>
+
+  <div class="nav-actions">
+    <button onclick="show('home')">Home</button>
+    <button onclick="show('login')">Login</button>
+
+    <!-- Notifications -->
+    <div class="notif-container">
+      <div class="notif-btn" onclick="toggleNotif()">
+        🔔
+        <div class="notif-dot"></div>
+      </div>
+
+      <div id="notifBox" class="notif-box hidden">
+        <b>Alerts</b>
+        <div class="notif-item notif-critical">
+          W-3 • Helmet Missing • 2 min ago
+        </div>
+        <div class="notif-item notif-warning">
+          W-1 • Goggles Verifying • Just now
+        </div>
+        <div class="notif-item notif-warning">
+          W-5 • Vest Verifying • 1 min ago
+        </div>
+      </div>
+    </div>
+
+    <!-- Theme -->
+    <button onclick="toggleTheme()">🌗 Theme</button>
+  </div>
+</nav>
+
+<!-- ================= HOME ================= -->
+<section id="home" class="active">
+  <div class="container hero">
+    <h2>ProteX🤖</h2>
+    <p>
+      PROTEX prevents industrial accidents using real-time computer vision
+      while rewarding workers for safety compliance.
+    </p>
+
+    <button onclick="show('login')">Secure Login</button>
+
+    <!-- EXISTING VISUALS (KEPT) -->
+    <div class="feature-visuals">
+      <div class="feature-card">
+        <div>🦺</div>
+        <h3>PPE Detection</h3>
+        <p>Helmet, Mask, Goggles, Vest & Gloves</p>
+      </div>
+      <div class="feature-card">
+        <div>🎥</div>
+        <h3>Live AI Vision</h3>
+        <p>Works on live & recorded video feeds</p>
+      </div>
+      <div class="feature-card">
+        <div>💰</div>
+        <h3>Worker Rewards</h3>
+        <p>Points convert into rewards</p>
+      </div>
+      <div class="feature-card">
+        <div>🚨</div>
+        <h3>Smart Alerts</h3>
+        <p>Only meaningful alerts, no spam</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:80px">How PROTEX Works</h2>
+    <div class="steps">
+      <div class="step"><span>1</span><p>AI detects PPE in video</p></div>
+      <div class="step"><span>2</span><p>Tracks compliance over time</p></div>
+      <div class="step"><span>3</span><p>Rewards safe behavior</p></div>
+      <div class="step"><span>4</span><p>Admin monitors insights</p></div>
+    </div>
+
+    <div class="impact">
+      <div><h3>↓45%</h3><p>Accidents Prevented</p></div>
+      <div><h3>↑60%</h3><p>Compliance Rate</p></div>
+      <div><h3>0.3s</h3><p>Detection Latency</p></div>
+      <div><h3>24×7</h3><p>AI Monitoring</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGIN / DASHBOARDS REMAIN UNCHANGED -->
+<!-- ================= LOGIN ================= -->
+<section id="login">
+  <div class="container center">
+    <div style="
+      max-width:420px;
+      margin:auto;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:32px;
+    ">
+
+      <h1 style="color:var(--accent);margin:0;">🛡 PROTEX</h1>
+      <p style="color:var(--muted);margin-top:6px;">
+        Secure Access Portal
+      </p>
+
+      <!-- ROLE -->
+      <div style="margin-top:24px;text-align:left;">
+        <label>Login As</label>
+        <select id="role" style="width:100%;padding:12px;
+          border-radius:10px;
+          background:var(--bg);
+          color:var(--text);
+          border:1px solid var(--border);">
+          <option value="admin">Admin</option>
+          <option value="worker">Worker</option>
+        </select>
+      </div>
+
+      <!-- ID -->
+      <div style="margin-top:16px;text-align:left;">
+        <label id="idLabel">Admin ID</label>
+        <input id="userId"
+          placeholder="ADMIN-01"
+          style="width:100%;padding:12px;
+          border-radius:10px;
+          background:var(--bg);
+          color:var(--text);
+          border:1px solid var(--border);">
+      </div>
+
+      <!-- PASSWORD -->
+      <div style="margin-top:16px;text-align:left;">
+        <label>Password / PIN</label>
+        <input id="password" type="password"
+          placeholder="••••••"
+          style="width:100%;padding:12px;
+          border-radius:10px;
+          background:var(--bg);
+          color:var(--text);
+          border:1px solid var(--border);">
+      </div>
+
+      <button onclick="login()" style="
+        margin-top:26px;
+        width:100%;
+        padding:14px;
+        border-radius:12px;
+        background:var(--accent);
+        color:white;
+        font-size:16px;
+        border:none;
+        cursor:pointer;">
+        Login
+      </button>
+
+      <p style="margin-top:18px;font-size:13px;color:var(--muted);">
+        Demo credentials:<br>
+        <b>Admin</b> → password: <b>admin123</b><br>
+        <b>Worker</b> → PIN: <b>1234</b>
+      </p>
+
+    </div>
+  </div>
+</section>
+<!-- ================= WORKER DASHBOARD ================= -->
+<section id="workerDashboard">
+  <div class="container">
+
+    <h2 style="margin-bottom:10px;">Worker Dashboard</h2>
+    <p style="color:var(--muted);margin-bottom:30px;">
+      Worker ID: <b id="workerIdDisplay">W-1</b>
+    </p>
+
+    <!-- POINTS CARD -->
+    <div style="
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:24px;
+      margin-bottom:30px;
+    ">
+      <h3 style="margin:0;color:var(--accent);">Your Safety Points</h3>
+      <h1 style="margin:10px 0;font-size:48px;" id="workerPoints">820</h1>
+
+      <p style="color:var(--muted);max-width:700px;">
+        These points are credited for consistent safety compliance.
+        Points can be used for <b>paid leave requests</b>, <b>shift benefits</b>,
+        or <b>converted to rewards at year-end</b>.
+      </p>
+
+      <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="btn">Request Paid Leave</button>
+        <button class="btn">View Reward Options</button>
+        <button class="btn">Save Points</button>
+      </div>
+    </div>
+
+    <!-- ACTIVITY TABLE -->
+    <div style="
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:24px;
+    ">
+      <h3 style="margin-bottom:16px;">Your Safety Compliance History</h3>
+
+      <table style="width:100%;border-collapse:collapse;font-size:14px;">
+        <thead>
+          <tr style="text-align:left;color:var(--muted);border-bottom:1px solid var(--border);">
+            <th>Time</th>
+            <th>Helmet</th>
+            <th>Goggles</th>
+            <th>Vest</th>
+            <th>Gloves</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="workerTable">
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+<!-- ================= ADMIN DASHBOARD ================= -->
+<section id="adminDashboard">
+    <!-- ===== PROTEX ADMIN HEADER ===== -->
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+  <span style="font-size:28px;">🛡</span>
+  <h1 style="margin:0;font-size:26px;color:var(--accent);">
+    PROTEX — Admin Safety Control
+  </h1>
+</div>
+
+<!-- ===== ALERT BOX ===== -->
+<div class="card" style="border-left:4px solid #ef4444;margin-bottom:18px;">
+  <b>⚠ Active Alert</b>
+  <p style="margin:6px 0;color:var(--muted);">
+    Worker <b>W-3</b> exceeded 2 warnings — Helmet missing
+  </p>
+</div>
+
+<!-- ===== MINI CHART ===== -->
+<!-- ===== MINI CHARTS ROW ===== -->
+<div style="
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:30px;
+  margin-top:30px;
+">
+
+  <div class="card">
+    <h4>PPE Compliance</h4>
+    <div style="height:6px;background:var(--ok);width:68%;border-radius:6px"></div>
+    <small style="color:var(--muted)">68% Safe</small>
+  </div>
+
+  <div class="card">
+    <h4>Warnings</h4>
+    <div style="height:6px;background:var(--warn);width:22%;border-radius:6px"></div>
+    <small style="color:var(--muted)">Under Review</small>
+  </div>
+
+  <div class="card">
+    <h4>Violations</h4>
+    <div style="height:6px;background:var(--bad);width:10%;border-radius:6px"></div>
+    <small style="color:var(--muted)">Critical</small>
+  </div>
+
+</div>
+    <div style="
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:18px;
+">
+  <span style="font-size:26px;">🛡</span>
+  <h1 style="
+    margin:0;
+    font-size:26px;
+    font-weight:700;
+    color:var(--accent);
+  ">
+    PROTEX — Admin Control Center
+  </h1>
+</div>
+  <div class="container">
+
+    <h2 style="margin-bottom:6px;">Admin Control Center</h2>
+    <div style="margin:12px 0 24px 0;">
+  <button class="btn" onclick="openDemo()">
+    ▶️ Watch System Demo
+  </button>
+</div>
+    <p style="color:var(--muted);margin-bottom:30px;">
+      Live Workforce Safety Overview
+    </p>
+
+    <!-- ===== TOP METRICS ===== -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:40px;">
+      <div class="card">
+        <h3>Live Events</h3>
+        <h1 id="liveEvents">7</h1>
+      </div>
+      <div class="card">
+        <h3>Total Workers</h3>
+        <h1 id="totalWorkers">6</h1>
+      </div>
+      <div class="card">
+        <h3>High-Risk Zones</h3>
+        <h1>2</h1>
+      </div>
+      <div class="card">
+        <h3>Under Verification</h3>
+        <h1>3</h1>
+      </div>
+    </div>
+<!-- ===== AI SAFETY DECISION EXPLANATION ===== -->
+<div class="card" style="margin-bottom:24px;border-left:4px solid var(--accent);">
+  <h3 style="margin-bottom:8px;">🤖 AI Safety Decision Engine</h3>
+  <p style="color:var(--muted);line-height:1.6;">
+    ProteX evaluates each worker based on their <b>role</b>, <b>zone risk level</b>,
+    and <b>required PPE policy</b>.
+    <br><br>
+    • <b>Factory Floor</b> → Helmet, Gloves, Vest mandatory  
+    <br>
+    • <b>Chemical Lab</b> → Helmet, Goggles, Mask, Gloves, Vest mandatory  
+    <br>
+    • <b>Warehouse</b> → Gloves & Vest mandatory  
+    <br><br>
+    A worker is marked <span style="color:var(--ok)">✔ Compliant</span> only when
+    <b>all required PPE</b> are detected as <b>PRESENT</b>.
+    <br>
+    <span style="color:var(--warn)">⚠ Verifying</span> indicates temporary uncertainty
+    (occlusion / motion).
+    <br>
+    <span style="color:var(--bad)">❌ Missing</span> triggers alerts and scoring penalties.
+  </p>
+</div>
+    <!-- ===== WORKER PROFILING TABLE ===== -->
+    <div class="card">
+      <h3 style="margin-bottom:16px;">Worker PPE Profiling</h3>
+
+      <table style="width:100%;border-collapse:collapse;font-size:14px;">
+        <thead>
+  <tr style="text-align:left;color:var(--muted);border-bottom:1px solid var(--border);">
+    <th>Worker ID</th>
+    <th>Role</th>
+    <th>Zone</th>
+    <th>🪖 Helmet</th>
+    <th>🥽 Goggles</th>
+    <th>😷 Mask</th>
+    <th>🦺 Vest</th>
+    <th>🧤 Gloves</th>
+    <th>Timestamps</th>
+    <th>Warning⚠️</th>
+     <th>View 👁️</th>
+  </tr>
+</thead>
+        <tbody id="adminWorkerTable">
+          <!-- JS fills -->
+        </tbody>
+      </table>
+    </div>
+    <!-- ===== EXPLAINABLE AI DECISION PANEL ===== -->
+<div id="decisionPanel" class="card hidden" style="margin-top:30px;">
+  <h3>🧠 AI Safety Decision Explanation</h3>
+  <div id="decisionContent"></div>
+
+  <div style="margin-top:16px;">
+    <button class="btn" onclick="closeDecision()">← Back to Admin Dashboard</button>
+  </div>
+</div>
+
+  </div>
+  <!-- ===== DEMO VIDEO MODAL ===== -->
+<div id="demoModal" class="hidden" style="
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.85);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+">
+
+  <div style="
+    width:80%;
+    max-width:900px;
+    background:var(--card);
+    border-radius:16px;
+    padding:20px;
+    position:relative;
+  ">
+
+    <h3 style="margin-bottom:12px;color:var(--accent);">
+      ▶️ PROTEX — Live System Demo
+    </h3>
+
+    <video id="demoVideo" controls style="width:100%;border-radius:12px;">
+      <source src="demo.mp4" type="video/mp4">
+      Your browser does not support video playback.
+    </video>
+
+    <button class="btn" style="margin-top:16px;" onclick="closeDemo()">
+      ⬅ Back to Admin Dashboard
+    </button>
+
+  </div>
+</div>
+</section>
+<script>
+function show(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function toggleTheme(){
+  document.body.classList.toggle("light");
+}
+
+function toggleNotif(){
+  document.getElementById("notifBox").classList.toggle("hidden");
+}
+
+/* ---------- FIX DEFAULT ROLE PLACEHOLDER ---------- */
+window.addEventListener("DOMContentLoaded", () => {
+  const role = document.getElementById("role");
+  if (role) role.dispatchEvent(new Event("change"));
+});
+
+/* ===== LOGIN ROLE PLACEHOLDER FIX (ADD ONLY) ===== */
+function updateLoginRole() {
+  const role = document.getElementById("role");
+  const label = document.getElementById("idLabel");
+  const input = document.getElementById("userId");
+
+  if (!role || !label || !input) return;
+
+  if (role.value === "worker") {
+    label.innerText = "Worker ID";
+    input.placeholder = "W-1";
+    input.value = "";
+  } else {
+    label.innerText = "Admin ID";
+    input.placeholder = "ADMIN-01";
+    input.value = "";
+  }
+}
+
+/* Listen for role change */
+document.getElementById("role")?.addEventListener("change", updateLoginRole);
+
+/* Apply once on page load */
+window.addEventListener("DOMContentLoaded", updateLoginRole);
+
+/* ===== WORKER LOGIN REDIRECT ===== */
+function login() {
+  const role = document.getElementById("role").value;
+  const userId = document.getElementById("userId").value;
+  const password = document.getElementById("password").value;
+
+  if (role === "worker") {
+    if (password !== "1234") {
+      alert("Invalid Worker PIN");
+      return;
+    }
+    loadWorkerDashboard(userId || "W-1");
+show("workerDashboard");
+  }
+
+  if (role === "admin") {
+    if (password !== "admin123") {
+      alert("Invalid Admin Password");
+      return;
+    }
+    show("adminDashboard"); // existing / future admin page
+  }
+  if (role === "admin") {
+  loadAdminDashboard();
+  show("adminDashboard");
+}
+}
+
+/* ===== FAKE REALISTIC WORKER DATA ===== */
+function loadWorkerData() {
+  const rows = [
+    {t:"09:15", h:"Present", g:"Present", v:"Present", gl:"Present", s:"✔ Compliant"},
+    {t:"10:40", h:"Present", g:"Verifying", v:"Present", gl:"Present", s:"⚠ Monitoring"},
+    {t:"12:05", h:"Present", g:"Present", v:"Missing", gl:"Present", s:"❌ Violation"},
+    {t:"14:20", h:"Present", g:"Present", v:"Present", gl:"Present", s:"✔ Compliant"},
+  ];
+
+  const tbody = document.getElementById("workerTable");
+  tbody.innerHTML = "";
+
+  rows.forEach(r=>{
+    tbody.innerHTML += `
+      <tr style="border-bottom:1px solid var(--border);">
+        <td>${r.t}</td>
+        <td>${r.h}</td>
+        <td>${r.g}</td>
+        <td>${r.v}</td>
+        <td>${r.gl}</td>
+        <td>${r.s}</td>
+      </tr>
+    `;
+  });
+}
+
+/* ===== ADMIN PROFILING DATA ===== */
+const workerProfiles = [
+  {
+    id:"W-1",
+    role:"Assembly Line",
+    zone:"Factory Floor",
+    required:["helmet","gloves","vest"],
+    status:"✔ Compliant"
+  },
+  {
+    id:"W-2",
+    role:"Packaging",
+    zone:"Warehouse",
+    required:["gloves","vest"],
+    status:"✔ Compliant"
+  },
+  {
+    id:"W-3",
+    role:"Chemical Lab",
+    zone:"High Risk",
+    required:["helmet","goggles","mask","gloves","vest"],
+    status:"❌ Helmet Missing"
+  },
+  {
+    id:"W-4",
+    role:"Maintenance",
+    zone:"Factory Floor",
+    required:["helmet","gloves"],
+    status:"⚠ Goggles Verifying"
+  },
+  {
+    id:"W-5",
+    role:"Supervisor",
+    zone:"Control Area",
+    required:["vest"],
+    status:"✔ Compliant"
+  },
+  {
+    id:"W-6",
+    role:"Electrician",
+    zone:"Restricted Zone",
+    required:["helmet","gloves"],
+    status:"⚠ Gloves Verifying"
+  }
+];
+
+function roleNote(role){
+  if (role.includes("Chemical"))
+    return "⚠ Helmet, Goggles & Mask mandatory";
+  if (role.includes("Factory"))
+    return "🦺 Helmet & Gloves mandatory";
+  if (role.includes("Warehouse"))
+    return "🧤 Gloves mandatory";
+  return "Standard PPE required";
+}
+
+function renderPPE(label, status){
+  if(status === "N/A") return "";
+  let color = "var(--muted)";
+  let icon = "ℹ️";
+
+  if(status === "PRESENT"){ color="var(--ok)"; icon="✅"; }
+  if(status === "VERIFYING"){ color="var(--warn)"; icon="⚠️"; }
+  if(status === "MISSING"){ color="var(--bad)"; icon="❌"; }
+
+  return `
+    <div style="margin-bottom:4px;color:${color}">
+      ${icon} ${label}
+    </div>
+  `;
+}
+/* ===== LOAD ADMIN DASHBOARD ===== */
+
+function loadAdminDashboard(){
+  const tbody = document.getElementById("adminWorkerTable");
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  adminWorkers.forEach(w => {
+    const danger = w.warnings > 2;
+
+    tbody.innerHTML += `
+      <tr style="
+        border-bottom:1px solid var(--border);
+        ${danger ? 'border:2px solid var(--bad); background:rgba(239,68,68,0.12);' : ''}
+      ">
+        <td><b>${w.id}</b></td>
+        <td>${w.role}</td>
+        <td>${w.zone}</td>
+
+        <td>${ppeCell(w.ppe.helmet)}</td>
+        <td>${ppeCell(w.ppe.goggles)}</td>
+        <td>${ppeCell(w.ppe.mask)}</td>
+        <td>${ppeCell(w.ppe.vest)}</td>
+       <td>${ppeCell(w.ppe.gloves)}</td>
+
+<!-- TIMESTAMP COLUMN -->
+<td style="font-size:12px;color:var(--muted)">
+  ${w.lastEventTime}
+</td>
+
+<!-- WARNINGS COLUMN -->
+<td style="font-weight:700;color:${danger ? 'var(--bad)' : 'var(--warn)'}">
+  ⚠ ${w.warnings}
+</td>
+
+<!-- VIEW COLUMN -->
+<td>
+  <button class="btn" onclick="openWorkerProfile('${w.id}')">
+    View
+  </button>
+</td>
+      </tr>
+    `;
+  });
+}
+
+/* ===== VIEW INDIVIDUAL WORKER ===== */
+function viewWorker(id){
+  alert("Opening detailed profile for " + id);
+  // Later you can reuse worker dashboard here
+}
+
+/* Load admin data on login */
+
+
+/* ===== ADMIN WORKER DATA (EXTENSION ONLY) ===== */
+const adminWorkers = [
+  {
+    id:"W-1",
+    role:"Assembly Line",
+    zone:"Factory Floor",
+    
+    required:["helmet","gloves","vest"],
+    warnings:2,
+    lastEventTime:"2026-01-15 10:58:41",
+
+    ppe:{helmet:"PRESENT",gloves:"PRESENT",vest:"VERIFYING",goggles:"N/A",mask:"N/A"}
+  },
+  {
+    id:"W-2",
+    role:"Warehouse",
+    zone:"Storage",
+    
+    required:["gloves","vest"],
+    warnings:1,
+    lastEventTime:"2026-01-15 11:06:09",
+    ppe:{helmet:"N/A",gloves:"PRESENT",vest:"PRESENT",goggles:"VERIFYING",mask:"N/A"}
+  },
+  {
+    id:"W-3",
+    role:"Chemical Lab",
+    zone:"High Risk",
+    required:["helmet","goggles","mask","gloves","vest"],
+    warnings:3,
+    lastEventTime:"2026-01-15 11:10:00",
+    ppe:{helmet:"MISSING",gloves:"PRESENT",vest:"PRESENT",goggles:"VERIFYING",mask:"PRESENT"}
+  },
+  {
+    id:"W-4",
+    role:"Maintenance",
+    zone:"Factory Floor",
+    required:["helmet","gloves"],
+    warnings:2,
+    lastEventTime:"2026-01-15 12:07:09",
+    ppe:{helmet:"PRESENT",gloves:"VERIFYING",vest:"N/A",goggles:"N/A",mask:"N/A"}
+  },
+  {
+    id:"W-5",
+    role:"Supervisor",
+    zone:"Control Area",
+    required:["vest"],
+    warnings:3,
+    lastEventTime:"2026-01-15 12:06:09",
+    ppe:{helmet:"N/A",gloves:"N/A",vest:"PRESENT",goggles:"N/A",mask:"N/A"}
+  },
+  {
+    id:"W-6",
+    role:"Electrician",
+    zone:"Restricted Zone",
+    required:["helmet","gloves"],
+    warnings:2,
+    lastEventTime:"2026-01-15 12:23:12",
+    ppe:{helmet:"VERIFYING",gloves:"PRESENT",vest:"N/A",goggles:"N/A",mask:"N/A"}
+  },
+  {
+    id:"W-7",
+    role:"Chemical Lab",
+    zone:"High Risk",
+    required:["helmet","goggles","mask","gloves","vest"],
+    warnings:4,
+    lastEventTime:"2026-01-15 13:06:33",
+    ppe:{helmet:"PRESENT",gloves:"PRESENT",vest:"VERIFYING",goggles:"PRESENT",mask:"VERIFYING"}
+  }
+];
+/* ===== SIMULATED WORKER POINTS DATABASE ===== */
+const workerPointsDB = {
+  "W-1": 820,
+  "W-2": 910,
+  "W-3": 640,
+  "W-4": 780,
+  "W-5": 950,
+  "W-6": 800,
+  "W-7": 560
+};
+function loadWorkerDashboard(workerId){
+  const points = workerPointsDB[workerId] ?? 700; // fallback
+  document.getElementById("workerIdDisplay").innerText = workerId;
+  document.getElementById("workerPoints").innerText = points;
+  loadWorkerData(); // existing function (table history)
+}
+
+/* ===== EXPLAINABLE DECISION LOG (ADD ONLY) ===== */
+const decisionTimeline = {
+  "W-3": [
+    {
+      time: "09:12:04",
+      rule: "Helmet mandatory in Chemical Lab",
+      required: ["helmet", "goggles", "mask", "gloves", "vest"],
+      detected: ["goggles", "mask", "gloves", "vest"],
+      missing: ["helmet"],
+      duration: "18 seconds",
+      action: "Warning #2 issued",
+      points: -15
+    }
+  ],
+  "W-4": [
+    {
+      time: "11:41:22",
+      rule: "Goggles required during maintenance",
+      required: ["helmet", "goggles", "gloves"],
+      detected: ["helmet", "gloves"],
+      missing: ["goggles"],
+      duration: "22 seconds",
+      action: "Monitoring",
+      points: 0
+    }
+  ]
+};
+
+/* ===== ROLE BASED PPE POLICY (ADD ONLY) ===== */
+const rolePPEPolicy = {
+  "Chemical Lab": ["helmet","goggles","mask","gloves","vest"],
+  "Factory Floor": ["helmet","gloves","vest"],
+  "Assembly Line": ["gloves","vest"],
+  "Warehouse": ["gloves","vest"],
+  "Maintenance": ["helmet","gloves"],
+  "Supervisor": ["vest"],
+  "Electrician": ["helmet","gloves"]
+};
+/* ===== SCORE CALCULATION (REQUIRED PPE ONLY) ===== */
+function calculateWorkerScore(worker){
+  let score = 100;
+
+  const required = rolePPEPolicy[worker.role] || worker.required;
+
+  required.forEach(ppe=>{
+    const state = worker.ppe[ppe];
+    if(state === "MISSING") score -= 15;
+    if(state === "VERIFYING") score -= 5;
+  });
+
+  return Math.max(score, 0);
+}
+/* ===== RENDER ADMIN TABLE (SAFE) ===== */
+
+
+/* ===== CHANGE REQUIRED PPE (ADMIN CONTROL) ===== */
+function updateRequiredPPE(workerId, ppe){
+  const w = adminWorkers.find(x=>x.id===workerId);
+  if(!w) return;
+
+  if(!w.required.includes(ppe)){
+    w.required.push(ppe);
+    alert(`Admin updated PPE policy for ${w.role}: ${ppe.toUpperCase()} added`);
+  } else {
+    alert(`${ppe.toUpperCase()} is already required for ${w.role}`);
+  }
+}
+/* ===== ADMIN → WORKER PROFILE REDIRECT ===== */
+function openWorkerProfile(workerId){
+
+ 
+  loadWorkerDashboard(workerId);
+  show("workerDashboard");
+
+
+  // Add Back button dynamically (once)
+  if(!document.getElementById("backToAdmin")){
+    const backBtn = document.createElement("button");
+    backBtn.id = "backToAdmin";
+    backBtn.className = "btn";
+    backBtn.innerText = "⬅ Back to Admin Dashboard";
+    backBtn.style.marginTop = "20px";
+    backBtn.onclick = () => show("adminDashboard");
+
+    document
+      .querySelector("#workerDashboard .container")
+      .appendChild(backBtn);
+  }
+}
+
+
+function closeDecision(){
+  document.getElementById("decisionPanel").classList.add("hidden");
+  show("adminDashboard");
+}
+function ppeCell(status){
+  if(status === "N/A")
+    return "<span style='color:var(--muted)'>—</span>";
+
+  if(status === "PRESENT")
+    return "<span style='color:var(--ok);font-weight:600;'>🟢 Present</span>";
+
+  if(status === "VERIFYING")
+    return "<span style='color:var(--warn);font-weight:600;'>🟡 Verifying</span>";
+
+  if(status === "MISSING")
+    return "<span style='color:var(--bad);font-weight:700;'>🔴 Missing</span>";
+
+  return status;
+}
+function openDemo(){
+  document.getElementById("demoModal").classList.remove("hidden");
+}
+
+function closeDemo(){
+  const modal = document.getElementById("demoModal");
+  modal.classList.add("hidden");
+
+  // Stop video when closed
+  modal.querySelector("video").pause();
+}
+
+// function openDemo(){
+//   alert(
+// "demo video will appear here"
+// )
+// }
+function openDemo(){
+  document.getElementById("demoModal").classList.remove("hidden");
+  document.getElementById("demoVideo").play();
+}
+
+function closeDemo(){
+  const video = document.getElementById("demoVideo");
+  video.pause();
+  video.currentTime = 0;
+  document.getElementById("demoModal").classList.add("hidden");
+}
+</script>
+<!-- ===== DEMO VIDEO MODAL ===== -->
+<div id="demoModal" class="hidden" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.75);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+">
+
+  <div style="
+    background:var(--card);
+    padding:20px;
+    border-radius:16px;
+    max-width:800px;
+    width:90%;
+  ">
+    <h3 style="margin-bottom:12px;">🎥 PROTEX System Demo</h3>
+
+    <video controls autoplay style="width:100%;border-radius:12px;">
+      <source src="demo.mp4" type="video/mp4">
+      Your browser does not support video playback.
+    </video>
+
+    <div style="margin-top:14px;text-align:right;">
+      <button class="btn" onclick="closeDemo()">Close</button>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
